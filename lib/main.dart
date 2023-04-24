@@ -1,4 +1,4 @@
-import 'package:chat_riverpod/view/list_view.dart';
+import 'view/list_view.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 

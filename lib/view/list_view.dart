@@ -1,8 +1,6 @@
-import 'package:flutter/cupertino.dart';
+import 'package:chat_riverpod/model/url_model.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-
-import '../model/url_model.dart';
 import '../model/list_model.dart';
 
 class UrlModelListScreen extends ConsumerWidget {
@@ -12,7 +10,8 @@ class UrlModelListScreen extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final urlModels = ref.watch(urlModelListViewModelProvider);
     final urlModelListNotifier = ref.read(urlModelListViewModelProvider.notifier);
-    String newUrlModelName = ''; // Track the new URL model name
+    urlModelListNotifier.initializeTextStreamSubscription();
+    String newUrlModelName = 'Name'; // Track the new URL model name
 
     void onAddButtonPressed() {
       final newUrlModel = UrlModel(urlModels.length + 1, newUrlModelName);
@@ -22,7 +21,7 @@ class UrlModelListScreen extends ConsumerWidget {
     }
 
     return Scaffold(
-      appBar: AppBar(title: Text('UrlModel List')),
+      appBar: AppBar(title: const Text('UrlModel List')),
       body: ListView.builder(
         itemCount: urlModels.length,
         itemBuilder: (context, index) {
@@ -36,7 +35,7 @@ class UrlModelListScreen extends ConsumerWidget {
       floatingActionButton: FloatingActionButton(
         onPressed: onAddButtonPressed,
         tooltip: 'Add UrlModel',
-        child: Icon(Icons.add),
+        child: const Icon(Icons.add),
       ),
     );
   }
