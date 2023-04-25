@@ -8,7 +8,8 @@ class FileHelper {
   // Method to get the file path for saving the text file
   static Future<String> getFilePath() async {
     final directory = await getApplicationDocumentsDirectory();
-    return directory.path + '/data.txt'; // You can set any file name here
+    print(directory);
+    return '${directory.path}/fclarke_data.txt'; // You can set any file name here
   }
 
   // Method to save list of UrlModel objects to a text file

@@ -1,9 +1,7 @@
 import 'dart:async';
-import 'dart:io';
-import 'package:chat_riverpod/model/file_helper.dart';
 import 'package:chat_riverpod/model/url_model.dart';
+import 'package:chat_riverpod/model/file_helper.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:path_provider/path_provider.dart';
 import 'package:receive_sharing_intent/receive_sharing_intent.dart';
 
 final urlModelListViewModelProvider = StateNotifierProvider<UrlModelListViewModel, List<UrlModel>>(
@@ -28,6 +26,7 @@ class UrlModelListViewModel extends StateNotifier<List<UrlModel>> {
   void initializeTextStreamSubscription() { //this gets called on sharing from Chrome
     if (!loaded) {
       print('initializeTextStreamSubscription');
+      loadList('');
       textStreamSubscription =
           ReceiveSharingIntent.getTextStream().listen((String value) {
             print('Loaded one Url');
@@ -37,17 +36,17 @@ class UrlModelListViewModel extends StateNotifier<List<UrlModel>> {
   }
 
   void loadList(String value) async {
+
     if (loaded) {
       addAndSave(value);
     }else {
       loaded = true;
-      state = await FileHelper.loadFromFile();
+      state = (await FileHelper.loadFromFile());
       print('Loaded Urls:');
       addAndSave(value);
       for (var url in state) {
         print('id=${url.id}, name=${url.name}');
       }
-
     }
   }
 
@@ -56,17 +55,22 @@ class UrlModelListViewModel extends StateNotifier<List<UrlModel>> {
   }
 
   Future<void> addAndSave(String sharedText)  async {
+    if (sharedText.isEmpty){
+      return;
+    }
     print("addTextToListIfUnique $sharedText");
     if (!checkIfTitleExists(state,sharedText)) {
       {
-        print('Urls doesn\'t exist.');
+        print('New Url!');
         UrlModel newUrlModel = UrlModel(id++, sharedText);
         state.add(newUrlModel);
         await FileHelper.saveToFile(state);
-          print('Urls saved to file.');
+        print('Urls saved to file. Length: ${state.length}');
+        state = (await FileHelper.loadFromFile());//seems you need to replace state to get the UI to respond
       }
     }
   }
+  
 
 
 }
