@@ -22,9 +22,9 @@ class UrlModelListScreen extends ConsumerWidget {
     }
     List<ExpandableColumn<dynamic>> headers = [
       ExpandableColumn<int>(columnTitle: "ID", columnFlex: 1),
-      ExpandableColumn<String>(columnTitle: "First name", columnFlex: 2),
-      ExpandableColumn<String>(columnTitle: "Last name", columnFlex: 2),
-      ExpandableColumn<String>(columnTitle: "Maiden name", columnFlex: 2),
+      ExpandableColumn<String>(columnTitle: "Url", columnFlex: 2),
+      ExpandableColumn<String>(columnTitle: "Address", columnFlex: 2),
+      ExpandableColumn<String>(columnTitle: "Price", columnFlex: 2),
       ExpandableColumn<int>(columnTitle: "Age", columnFlex: 1),
       ExpandableColumn<String>(columnTitle: "Gender", columnFlex: 2),
       ExpandableColumn<String>(columnTitle: "Email", columnFlex: 4),
@@ -32,9 +32,9 @@ class UrlModelListScreen extends ConsumerWidget {
     List<ExpandableRow> rows = urlModels.map<ExpandableRow>((e) {
       return ExpandableRow(cells: [
         ExpandableCell<int>(columnTitle: "ID", value: e.id),
-        ExpandableCell<String>(columnTitle: "First name", value: e.name),
-        ExpandableCell<String>(columnTitle: "Last name", value: e.name),
-        ExpandableCell<String>(columnTitle: "Maiden name", value: e.name),
+        ExpandableCell<String>(columnTitle: "Url", value: e.name),
+        ExpandableCell<String>(columnTitle: "Address", value: e.name),
+        ExpandableCell<String>(columnTitle: "Price", value: e.name),
         ExpandableCell<int>(columnTitle: "Age", value: e.id),
         ExpandableCell<String>(columnTitle: "Gender", value: e.name),
         ExpandableCell<String>(columnTitle: "Email", value: e.name),
@@ -45,22 +45,40 @@ class UrlModelListScreen extends ConsumerWidget {
       body: ListView.builder(
         itemCount: urlModels.length,
         itemBuilder: (context, index) {
-          final urlModel = urlModels[index];
           return SizedBox(
-            height: 500,
-            width: 500,
+            height: 444,
+            width: 433,
             child: ExpandableTheme(
               data: ExpandableThemeData(
                 context,
-                rowBorder: const BorderSide(color: Colors.amber),
+                contentPadding: const EdgeInsets.all(20),
                 expandedBorderColor: Colors.transparent,
-                paginationSize: 48,
+                paginationSize: 20,
+                headerHeight: 56,
+                headerColor: Colors.amber[400],
+                headerBorder: const BorderSide(
+                  color: Colors.black,
+                  width: 1,
+                ),
+                evenRowColor: const Color(0xFFFFFFFF),
+                oddRowColor: Colors.amber[200],
+                rowBorder: const BorderSide(
+                  color: Colors.black,
+                  width: 0.3,
+                ),
+                rowColor: Colors.green,
+                headerTextMaxLines: 4,
+                headerSortIconColor: const Color(0xFF6c59cf),
+                paginationSelectedFillColor: const Color(0xFF6c59cf),
+                paginationSelectedTextColor: Colors.white,
               ),
 
               child: ExpandableDataTable(
                 rows: rows,
                 headers: headers,
-                visibleColumnCount: 4,
+                visibleColumnCount: 5,
+                multipleExpansion: false,
+                isEditable: true,
               ),
             ),
           );
