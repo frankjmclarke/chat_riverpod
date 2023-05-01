@@ -5,21 +5,6 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:chat_riverpod/model/list_model.dart';
 import 'package:chat_riverpod/util/my_string.dart';
 
-class MyNavigatorObserver extends NavigatorObserver {
-  final Function(dynamic) onPop;
-
-  MyNavigatorObserver({required this.onPop});
-
-  @override
-  void didPop(Route<dynamic> route, Route<dynamic>? previousRoute) {
-    if (previousRoute != null) {
-      final result = route.settings.arguments;
-      if (result != null) {
-        onPop(result);
-      }
-    }
-  }
-}
 
 
 class UrlModelListScreen extends ConsumerWidget {
@@ -65,7 +50,7 @@ class UrlModelListScreen extends ConsumerWidget {
           itemCount: urlModels.length,
           itemBuilder: (context, index) {
             return ListTile(
-              title: Text(MyString.limitString(urlModels.reversed.toList()[index].name, 25)),
+              title: Text(MyString.limitString(urlModels.reversed.toList()[index].name, 35)),
               subtitle: Text('ID: ${urlModels.reversed.toList()[index].id}'),
               onTap: () => onTileTapped(index),
             );

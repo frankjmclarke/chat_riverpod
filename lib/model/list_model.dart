@@ -45,12 +45,13 @@ class UrlModelListViewModel extends StateNotifier<List<UrlModel>> {
 
   void loadList(String value) async {
     if (loaded) {
-      addAndSave(value);
+      add(value);
+      save();
     } else {
       loaded = true;
       state = (await FileHelper.loadFromFile());
       print('Loaded Urls:');
-      addAndSave(value);
+      add(value);
       for (var url in state) {
         print('id=${url.id}, name=${url.name}');
       }
@@ -61,18 +62,11 @@ class UrlModelListViewModel extends StateNotifier<List<UrlModel>> {
     return urls.any((url) => url.name == title);
   }
 
-  Future<void> addAndSave(String sharedText) async {
-    if (sharedText.isEmpty) {
-      return;
-    }
-    print("addTextToListIfUnique $sharedText");
-    if (!checkIfTitleExists(state, sharedText)) {
-      {
-        print('New Url!');
-        UrlModel newUrlModel = UrlModel(id++, sharedText);
-        state.add(newUrlModel);
-        save();
-      }
+  Future<void> add(String sharedText) async {
+    if (sharedText.isNotEmpty && !checkIfTitleExists(state, sharedText)) {
+      print("addTextToListIfUnique $sharedText");
+      UrlModel newUrlModel = UrlModel(id++, sharedText);
+      state.add(newUrlModel);
     }
   }
 
