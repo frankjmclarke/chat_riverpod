@@ -4,8 +4,9 @@ import 'package:chat_riverpod/model/file_helper.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:receive_sharing_intent/receive_sharing_intent.dart';
 
-final urlModelListViewModelProvider = StateNotifierProvider<UrlModelListViewModel, List<UrlModel>>(
-      (ref) => UrlModelListViewModel([]),
+final urlModelListViewModelProvider =
+    StateNotifierProvider<UrlModelListViewModel, List<UrlModel>>(
+  (ref) => UrlModelListViewModel([]),
 );
 
 class UrlModelListViewModel extends StateNotifier<List<UrlModel>> {
@@ -14,32 +15,38 @@ class UrlModelListViewModel extends StateNotifier<List<UrlModel>> {
   void updateUrlModels(List<UrlModel> urlModels) {
     state = urlModels;
   }
+
+  void updateUrl(UrlModel newUrlModel, int myIndex) {
+    state.reversed.toList()[myIndex] = newUrlModel;
+  }
+
   void addUrlModel(UrlModel newUrlModel) {
     state = [...state, newUrlModel];
   }
+
   ////////////////////////////////////
   static const String filename = "shared_url_list.txt";
   bool loaded = false;
-  int id=0;
+  int id = 0;
   StreamSubscription<String>? textStreamSubscription;
 
-  void initializeTextStreamSubscription() { //this gets called on sharing from Chrome
+  void initializeTextStreamSubscription() {
+    //this gets called on sharing from Chrome
     if (!loaded) {
       print('initializeTextStreamSubscription');
       loadList('');
       textStreamSubscription =
           ReceiveSharingIntent.getTextStream().listen((String value) {
-            print('Loaded one Url');
-            loadList(value);
-          });
+        print('Loaded one Url');
+        loadList(value);
+      });
     }
   }
 
   void loadList(String value) async {
-
     if (loaded) {
       addAndSave(value);
-    }else {
+    } else {
       loaded = true;
       state = (await FileHelper.loadFromFile());
       print('Loaded Urls:');
@@ -54,26 +61,29 @@ class UrlModelListViewModel extends StateNotifier<List<UrlModel>> {
     return urls.any((url) => url.name == title);
   }
 
-  Future<void> addAndSave(String sharedText)  async {
-    if (sharedText.isEmpty){
+  Future<void> addAndSave(String sharedText) async {
+    if (sharedText.isEmpty) {
       return;
     }
     print("addTextToListIfUnique $sharedText");
-    if (!checkIfTitleExists(state,sharedText)) {
+    if (!checkIfTitleExists(state, sharedText)) {
       {
         print('New Url!');
         UrlModel newUrlModel = UrlModel(id++, sharedText);
         state.add(newUrlModel);
-        await FileHelper.saveToFile(state);
-        print('Urls saved to file. Length: ${state.length}');
-        state = (await FileHelper.loadFromFile());//seems you need to replace state to get the UI to respond
+        save();
       }
     }
   }
-  
 
-
+  Future<void> save() async {
+    await FileHelper.saveToFile(state);
+    print('Urls saved to file. Length: ${state.length}');
+    state = (await FileHelper
+        .loadFromFile()); //seems you need to replace state to get the UI to respond
+  }
 }
+
 /*
 urlModelListViewModelProvider: This is a StateNotifierProvider that defines the state for
 a list of UrlModel objects. It takes an initial value of an empty list ([]) and

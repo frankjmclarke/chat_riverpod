@@ -15,6 +15,9 @@ class UrlModel {
   factory UrlModel.fromMap(Map<String, dynamic> map) {
     return UrlModel(map['id'], map['name']);
   }
+  void updateName(String newName) {
+    name = newName;
+  }
 }
 /*
 UrlModel: This is a class that represents a URL model with two properties: _id
